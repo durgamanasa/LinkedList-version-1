@@ -126,6 +126,45 @@ LinkedList reverse(LinkedList list){
 	return reversedList;
 };
 
+void get_square(void * hint, void * sourceItem, void * destinationItem){
+	int value = *(int *)sourceItem;
+	int square = value * value;
+	*(int *)destinationItem = square;
+};
+
+void increment_by_10(void * hint, void * sourceItem, void * destinationItem){
+	int value = *(int *)sourceItem;
+	int incremented_value = value + 10;
+	*(int *)destinationItem = incremented_value;
+};
+
+LinkedList map(LinkedList list, ConvertFunc func, void *hint){
+	Element *ele = list.first;
+	LinkedList new_list = createList();
+	for (int i = 0; i < list.length; ++i){
+		void *dest = malloc(sizeof(void *));
+		func(hint, ele->value, dest);
+		add_to_list(&new_list, dest);
+		ele = ele->next;
+	}
+	return new_list;
+};
+
+void* get_sum_of_list(void* hint, void* previousItem, void* item){
+	*(int *) previousItem = *(int *)previousItem + *(int *)item;
+	return previousItem;
+};
+
+void* reduce(LinkedList list, Reducer func, void *hint, void *initialValue){
+	Element *ele = list.first;
+	for (int i = 0; i < list.length; ++i){
+		func(hint, initialValue, ele->value);
+		ele = ele->next;
+	}
+	return initialValue;
+};
+
+
 
 
 
