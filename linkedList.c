@@ -38,21 +38,93 @@ void increment(void * item){
 };
 
 void forEach(LinkedList list, ElementProcessor e){
-	Element *temp = list.first;
-	while(temp != NULL){
-		e(temp->value);
-		temp = temp->next;
+	Element *ele = list.first;
+	while(ele != NULL){
+		e(ele->value);
+		ele = ele->next;
 	}
 };
 
+void * getElementAt(LinkedList list, int index){
+	Element *ele = list.first;
+	for (int i = 0; i < list.length; ++i){
+		if (index == i){
+			return ele->value;
+		}
+		ele = ele->next;
+	}
+	return NULL;
+};
 
+int indexOf(LinkedList list, void *number){
+	int element = *(int *)number;
+	Element *ele = list.first;
+	for (int i = 0; i < list.length; ++i){
+		if (element == *((int *)ele->value)){
+			return 1;
+		}
+		ele = ele->next;
+	}
+	return -1;
+};
 
+void * deleteElementAt(LinkedList *list, int index){
+	Element *ele = list->first;
+	for (int i = 0; i < index; ++i){
+		if (i == index-1){
+			Element *deletedValue = ele->next->value;
+			ele->next = ele->next->next;
+			list->length--;
+			return deletedValue;
+		}
+		ele = ele->next;
+	}
+	return NULL;
+};
 
+int asArray(LinkedList list, void ** array, int maxElements){
+	Element *ele = list.first;
+	int length;
+	if (maxElements < list.length){
+		length = maxElements;
+	}
+	length = list.length;
+	for (int i = 0; i < length; ++i){
+		array[i] = ele->value;
+		ele = ele->next;
+	}
+	return maxElements;
+};
 
+int isOdd(void* hint, void* item){
+	int value = *(int *)item;
+	if (value % 2 != 0){
+		return 1;
+	}
+	return 0;
+};
 
+LinkedList  filter(LinkedList list, MatchFunc func, void * hint){
+	Element *ele = list.first;
+	LinkedList odd_list = createList();
+	for (int i = 0; i < list.length; ++i){
+		if(func(hint, ele->value)){
+			add_to_list(&odd_list, ele->value);
+		}
+		ele = ele->next;
+	}
+	return odd_list;
+};
 
-
-
+LinkedList reverse(LinkedList list){
+	Element *ele = list.first;
+	LinkedList reversedList = createList();
+	for (int i = list.length-1; i >= 0; --i){
+		add_to_list(&reversedList, getElementAt(list, i));
+		ele = ele->next;
+	}
+	return reversedList;
+};
 
 
 
